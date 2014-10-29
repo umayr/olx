@@ -1,0 +1,239 @@
+<!doctype html>
+<html class="no-js" ng-app="olx-client">
+<head>
+    <meta charset="utf-8">
+    <title>Olx Data Panel</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+</head>
+<body>
+<!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a
+        href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+
+<div class="container">
+    <div ng-controller="dashboard">
+        <div class="modal fade" id="adModal" tabindex="-1" role="dialog" aria-labelledby="adModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">{{selectedAd.Title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-details">
+                            <tr>
+                                <td><strong>Location</strong></td>
+                                <td>{{selectedAd.Location}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Price</strong></td>
+                                <td>{{selectedAd.Price}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seller</strong></td>
+                                <td>{{selectedAd.Seller}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contact</strong></td>
+                                <td>{{selectedAd.SellerContact}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Type</strong></td>
+                                <td>{{selectedAd.Type}}</td>
+                            </tr>
+                        </table>
+
+                        <div class="description">
+                            <h4>Description</h4>
+
+                            <p>{{selectedAd.Description}}</p>
+                        </div>
+
+                        <div ng-show="selectedAd.HasPictures">
+                            <h4>Images</h4>
+                            <a data-toggle="modal" ng-show="!showImages"
+                               data-target="#imagesModal"
+                               ng-href="#" ng-click="loadImages(selectedAd.UniqueId)"
+                               class="btn btn-primary btn-sm">Show Images URL</a>
+
+                            <div class="text-center" ng-show="showImages">
+                                <ul class="images-list" ng-repeat="image in selectedAd.Images">
+                                    <li>
+                                        <a ng-href="{{ image }}" target="_blank">
+                                            [Link {{$index + 1}}]
+                                        </a>
+                                    </li>
+                                </ul>
+                                <br class="clearfix"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="response">
+            <table class="table table-striped table-condensed table-bordered table-main">
+                <thead>
+                    <tr>
+                        <td>
+                            <strong>#</strong>
+                        </td>
+                        <td>
+                            <strong>Title</strong>
+                        </td>
+                        <td>
+                            <strong>Category</strong>
+                        </td>
+                        <td>
+                            <strong>Url</strong>
+                        </td>
+
+                        <td>
+                            <strong>Action</strong>
+                        </td>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in response">
+                        <td>
+                            {{item.Id}}
+                        </td>
+                        <td>
+                            {{item.Title}}
+                        </td>
+                        <td>
+                            {{item.Type}}
+                        </td>
+                        <td>
+                            <a ng-href="{{item.Url}}" target="_blank">Link</a>
+                        </td>
+                        <td>
+                            <a data-toggle="modal"
+                               data-target="#adModal"
+                               ng-href="#" ng-click="selectAd(item)"
+                               class="btn btn-xs btn-primary">View</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="text-center">
+                <ul class="pagination">
+                    <li ng-class="{'disabled' : currentPage === 1}">
+                        <a ng-href="#" ng-click="prevPage()">&laquo;</a>
+                    </li>
+                    <li ng-repeat="n in pages" ng-class="{'active' : n === currentPage}">
+                        <a ng-href="#" ng-click="loadPage(n)">{{n}}</a>
+                    </li>
+                    <li ng-if="showDottedPagination()">
+                        <a ng-href="">...</a>
+                    </li>
+                    <li ng-class="{'disabled' : currentPage === totalPages}">
+                        <a ng-href="#" ng-click="nextPage()">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="spinner-wrap" ng-show="loader">
+            <div class="spinner">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+            </div>
+        </div>
+        <div class="login-wrapper" ng-show="!login.attempt">
+            <div class="well login-box">
+                <form action="">
+                    <legend>Login</legend>
+                    <div class="alert"
+                         ng-show="login.result"
+                         ng-class="{'alert-danger' : !login.result.success, 'alert-success' : login.result.success}">
+                        <p ng-bind="login.result.message"></p>
+                    </div>
+                    <div class="form-group">
+                        <input id="username" autofocus
+                               placeholder="Username" type="text" ng-model="login.username"
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input id="password" placeholder="Password" type="password" ng-model="login.password"
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group text-center">
+                        <input type="submit" ng-click="loginAttempt($event)"
+                               class="btn btn-block btn-default btn-login-submit"
+                               value="Login"/>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/carousel.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/collapse.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/dropdown.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tab.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/scrollspy.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/popover.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/underscore/underscore.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<!--<script>
+    (function (b, o, i, l, e, r) {
+        b.GoogleAnalyticsObject = l;
+        b[l] || (b[l] =
+                function () {
+                    (b[l].q = b[l].q || []).push(arguments)
+                });
+        b[l].l = +new Date;
+        e = o.createElement(i);
+        r = o.getElementsByTagName(i)[0];
+        e.src = '//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e, r)
+    }(window, document, 'script', 'ga'));
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+</script>-->
+
+<!-- build:js({app,.tmp}) scripts/main.js -->
+<script src="scripts/main.js"></script>
+<script src="scripts/controllers.js"></script>
+<script src="scripts/services.js"></script>
+<!-- endbuild -->
+</body>
+</html>
