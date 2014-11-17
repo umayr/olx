@@ -10,6 +10,8 @@ client/.idea/
 client/bower_components/
 client/node_modules/
 
+packages/
+
 # Build results
 
 [Dd]ebug/
