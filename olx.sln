@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "olx", "olx\olx.csproj", "{A5174CA3-D3DD-4302-9877-B50AD28FBF20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "olx.api", "olx.api\olx.api.csproj", "{61674AAB-9CFD-41E9-9A72-ACF223DFEA65}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A5174CA3-D3DD-4302-9877-B50AD28FBF20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5174CA3-D3DD-4302-9877-B50AD28FBF20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5174CA3-D3DD-4302-9877-B50AD28FBF20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5174CA3-D3DD-4302-9877-B50AD28FBF20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61674AAB-9CFD-41E9-9A72-ACF223DFEA65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61674AAB-9CFD-41E9-9A72-ACF223DFEA65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61674AAB-9CFD-41E9-9A72-ACF223DFEA65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61674AAB-9CFD-41E9-9A72-ACF223DFEA65}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
